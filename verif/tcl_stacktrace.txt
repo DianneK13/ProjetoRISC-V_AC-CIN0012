@@ -1,0 +1,23 @@
+Thu Oct 30 11:35:41 ART 2025
+Trace back: can't read "Project(ForceSoftPaths)": no such element in array
+    while executing
+"if {$Project(ForceSoftPaths)} {
+		set new_file_name [SoftenPath $new_file_name]
+	} "
+    (procedure "Project::addFile" line 55)
+    invoked from within
+"Project::addFile $name [MtiFS::TypeFromLabel $Project(dlg_addsrc_type)] $Project(dlg_addsrc_folder)"
+    (procedure "Project::addSrcFiles" line 46)
+    invoked from within
+"Project::addSrcFiles .as"
+    invoked from within
+".as.bb.button0 invoke"
+    ("uplevel" body line 1)
+    invoked from within
+"uplevel #0 [list $w invoke]"
+    (procedure "tk::ButtonUp" line 24)
+    invoked from within
+"tk::ButtonUp .as.bb.button0"
+    (command bound to event)
+  <2:C:/intelFPGA/20.1/modelsim_ase/win32aloem/tk8.6/bgerror.tcl:106: ::tkerror {can't read "Project(ForceSoftPaths)": no such element in array}
+  <1:eval:1: ::tk::dialog::error::bgerror {can't read "Project(ForceSoftPaths)": no such element in array}
