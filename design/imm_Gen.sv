@@ -11,6 +11,12 @@ module imm_Gen (
       7'b0000011:  /*I-type load part*/
       Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:20]};
 
+      7'b1100111:  /*I-type jump part*///parecido com auipc, tbm n sei
+      Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:20]};
+
+      7'b0010011:  /*I-type immediate operations part*/
+      Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:20]};
+
       7'b0100011:  /*S-type*/
       Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:25], inst_code[11:7]};
 
@@ -21,6 +27,22 @@ module imm_Gen (
         inst_code[7],
         inst_code[30:25],
         inst_code[11:8],
+        1'b0
+      };
+
+      7'b0110111:  /*U-type (lui)*/
+      Imm_out = {inst_code[31:12], inst_code[31] ? 12'hFFFFF : 12'b0};
+
+      7'b0010111:  /*U-type (auipc)*///n entendi direito como funciona, pode estar errado
+      Imm_out = {inst_code[31:12], inst_code[31] ? 12'hFFFFF : 12'b0};
+
+      7'b1101111:  /*J-type*/
+      Imm_out = {
+        inst_code[31] ? 11'h7FFFF : 11'b0,
+        inst_code[31],
+        inst_code[19:12],
+        inst_code[20],
+        inst_code[30:21],
         1'b0
       };
 
