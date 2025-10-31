@@ -416,3 +416,13 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Arquivos gerados pelo ModelSim:
+verif/*.cr.mti
+verif/*.mpf
+verif/transcript
+verif/*.wlf
+verif/*.ver
+verif/work/
+verif/tcl_stacktrace.txt
+design/*.bak
