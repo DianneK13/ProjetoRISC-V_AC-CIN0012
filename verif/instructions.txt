@@ -1,4 +1,4 @@
 lw x10,0(x0)
 lw x11,4(x0)
-or x12,x10,x11
-xor x13,x10,x11
+sub x12,x10,x11
+sub x13,x11,x10
