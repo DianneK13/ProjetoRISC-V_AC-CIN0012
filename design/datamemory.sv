@@ -38,6 +38,16 @@ module datamemory #(
       case (Funct3)
         3'b010:  //LW
         rd <= Dataout;
+        3'b000:  //LB (SIGNED)
+        begin
+          case (a[1:0]) // Extract the correct byte from Dataout using the byte offset (a[1:0]) and sign-extend to 32 bits
+                        // Use concatenation and replication for sign extension (pg A-22 from textbook)
+            2'b00: rd <= {{24{Dataout[7]}},  Dataout[7:0]};     // Offset '00' (Byte 0)
+            2'b01: rd <= {{24{Dataout[15]}}, Dataout[15:8]};    // Offset '01' (Byte 1)
+            2'b10: rd <= {{24{Dataout[23]}}, Dataout[23:16]};   // Offset '10' (Byte 2)
+            2'b11: rd <= {{24{Dataout[31]}}, Dataout[31:24]};   // Offset '11' (Byte 3)
+          endcase
+        end
         default: rd <= Dataout;
       endcase
     end else if (MemWrite) begin
