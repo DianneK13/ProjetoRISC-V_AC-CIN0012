@@ -50,7 +50,7 @@ module datamemory #(
         end
         3'b001:  //LH 
         begin
-          case(a[0])
+          case(a[1])
             1'b0: rd <= {{16{Dataout[15]}},  Dataout[15:0]};     // Offset '0' (Byte 0)
             1'b1: rd <= {{16{Dataout[31]}},  Dataout[31:16]};    // Offset '1' (Byte 1)
           endcase
