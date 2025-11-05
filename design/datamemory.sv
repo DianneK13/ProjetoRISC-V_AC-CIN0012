@@ -48,6 +48,13 @@ module datamemory #(
             2'b11: rd <= {{24{Dataout[31]}}, Dataout[31:24]};   // Offset '11' (Byte 3)
           endcase
         end
+        3'b001:  //LH 
+        begin
+          case(a[0])
+            1'b0: rd <= {{16{Dataout[15]}},  Dataout[15:0]};     // Offset '0' (Byte 0)
+            1'b1: rd <= {{16{Dataout[31]}},  Dataout[31:16]};    // Offset '1' (Byte 1)
+          endcase
+        end
         default: rd <= Dataout;
       endcase
     end else if (MemWrite) begin
