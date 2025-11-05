@@ -1,4 +1,4 @@
-lb x10,0(x0)
-lb x11,4(x0)
+lh x10,0(x0)
+lh x11,4(x0)
 add x12,x11,x10
 sub x13,x11,x10
