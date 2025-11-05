@@ -55,6 +55,15 @@ module datamemory #(
             1'b1: rd <= {{16{Dataout[31]}},  Dataout[31:16]};    // Offset '1' (Byte 1)
           endcase
         end
+        3'b100:  //LBU (UNSIGNED)
+        begin
+          case (a[1:0]) 
+            2'b00: rd <= {{24{0}},  Dataout[7:0]};     // Offset '00' (Byte 0)
+            2'b01: rd <= {{24{0}}, Dataout[15:8]};     // Offset '01' (Byte 1)
+            2'b10: rd <= {{24{0}}, Dataout[23:16]};    // Offset '10' (Byte 2)
+            2'b11: rd <= {{24{0}}, Dataout[31:24]};    // Offset '11' (Byte 3)
+          endcase
+        end
         default: rd <= Dataout;
       endcase
     end else if (MemWrite) begin
