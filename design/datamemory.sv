@@ -72,6 +72,26 @@ module datamemory #(
           Wr <= 4'b1111;
           Datain <= wd;
         end
+        3'b000: begin  //SB
+          case (a[1:0])
+            2'b00: begin                               // Offset '00' (Byte 0)
+              Wr <= 4'b0001;
+              Datain <= {Dataout[31:8], wd[7:0]};    
+            end
+            2'b01: begin                               // Offset '01' (Byte 1)
+              Wr <= 4'b0010;
+              Datain <= {Dataout[31:16], wd[7:0], Dataout[7:0]};
+            end
+            2'b10: begin                               // Offset '10' (Byte 2)
+              Wr <= 4'b0100;
+              Datain <= {Dataout[31:24], wd[7:0], Dataout[15:0]};
+            end
+            2'b11: begin                               // Offset '11' (Byte 3)
+              Wr <= 4'b1000;
+              Datain <= {wd[7:0], Dataout[24:0]};
+            end
+          endcase
+        end
         default: begin
           Wr <= 4'b1111;
           Datain <= wd;
