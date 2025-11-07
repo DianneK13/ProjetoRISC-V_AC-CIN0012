@@ -88,7 +88,7 @@ module datamemory #(
             end
             2'b11: begin                               // Offset '11' (Byte 3)
               Wr <= 4'b1000;
-              Datain <= {wd[7:0], Dataout[24:0]};
+              Datain <= {wd[7:0], Dataout[23:0]};
             end
           endcase
         end
