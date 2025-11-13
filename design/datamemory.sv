@@ -29,7 +29,7 @@ module datamemory #(
   );
 
   always_ff @(*) begin
-    raddress = {{22{1'b0}}, {a[8:2], {2{1'b0}}}};
+    raddress = {{22{1'b0}}, a};
     waddress = {{22{1'b0}}, {a[8:2], {2{1'b0}}}};
     Datain = wd;
     Wr = 4'b0000;
@@ -39,31 +39,11 @@ module datamemory #(
         3'b010:  //LW
         rd <= Dataout;
         3'b000:  //LB (SIGNED)
-        begin
-          case (a[1:0]) // Extract the correct byte from Dataout using the byte offset (a[1:0]) and sign-extend to 32 bits
-                        // Use concatenation and replication for sign extension (pg A-22 from textbook)
-            2'b00: rd <= {{24{Dataout[7]}},  Dataout[7:0]};     // Offset '00' (Byte 0)
-            2'b01: rd <= {{24{Dataout[15]}}, Dataout[15:8]};    // Offset '01' (Byte 1)
-            2'b10: rd <= {{24{Dataout[23]}}, Dataout[23:16]};   // Offset '10' (Byte 2)
-            2'b11: rd <= {{24{Dataout[31]}}, Dataout[31:24]};   // Offset '11' (Byte 3)
-          endcase
-        end
+        rd <= {{24{Dataout[7]}},  Dataout[7:0]};
         3'b001:  //LH 
-        begin
-          case(a[1])
-            1'b0: rd <= {{16{Dataout[15]}},  Dataout[15:0]};     // Offset '0' (Byte 0)
-            1'b1: rd <= {{16{Dataout[31]}},  Dataout[31:16]};    // Offset '1' (Byte 1)
-          endcase
-        end
+        rd <= {{16{Dataout[15]}}, Dataout[15:0]};
         3'b100:  //LBU (UNSIGNED)
-        begin
-          case (a[1:0]) 
-            2'b00: rd <= {{24{0}},  Dataout[7:0]};     // Offset '00' (Byte 0)
-            2'b01: rd <= {{24{0}}, Dataout[15:8]};     // Offset '01' (Byte 1)
-            2'b10: rd <= {{24{0}}, Dataout[23:16]};    // Offset '10' (Byte 2)
-            2'b11: rd <= {{24{0}}, Dataout[31:24]};    // Offset '11' (Byte 3)
-          endcase
-        end
+        rd <= {{24{0}},  Dataout[7:0]};
         default: rd <= Dataout;
       endcase
     end else if (MemWrite) begin
