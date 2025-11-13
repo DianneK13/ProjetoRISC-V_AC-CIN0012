@@ -1,8 +1,9 @@
 `timescale 1ns / 1ps
 
 module imm_Gen (
-    input  logic [31:0] inst_code,
-    output logic [31:0] Imm_out
+    input  logic [14:12] function_3,
+    input  logic [31:0]  inst_code,
+    output logic [31:0]  Imm_out
 );
 
 
@@ -11,6 +12,10 @@ module imm_Gen (
       7'b0000011:  /*I-type load part*/
       Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:20]};
 
+      7'b0010011:  /*I-type bigger immediate part*/
+        case(function_3)
+          default: Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:20]};
+        endcase
       7'b0100011:  /*S-type*/
       Imm_out = {inst_code[31] ? 20'hFFFFF : 20'b0, inst_code[31:25], inst_code[11:7]};
 
