@@ -33,7 +33,8 @@ module alu#(
                     ALUResult = SrcA << SrcB;
             4'b0101:        // SRLI
                     ALUResult = SrcA >> SrcB; 
-            
+            4'b1001:        // SRAI
+                    ALUResult = $signed(SrcA) >>> SrcB[4:0];
             default:
                     ALUResult = 0;
             endcase
