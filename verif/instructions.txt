@@ -1,4 +1,4 @@
-lh x10,3(x0)
-lh x11,5(x0)
-lbu x12,2(x0)
-lbu x13,9(x0)
+addi x5,x5,4
+bne x4,x4,8
+addi x8,x8,10
+addi x8,x8,10
