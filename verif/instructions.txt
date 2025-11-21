@@ -1,5 +1,5 @@
 addi x4,x0,4
 addi x1,x0,9
-blt x1,x4,8
+bge x4,x1,8
 addi x8,x8,10
 addi x8,x8,10
