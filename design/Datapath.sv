@@ -13,11 +13,11 @@ module Datapath #(
     input  logic                 clk,
     reset,
     RegWrite,
-    MemtoReg,  // Register file writing enable   // Memory or ALU MUX
     ALUsrc,
     MemWrite,  // Register file or Immediate MUX // Memroy Writing Enable
     MemRead,  // Memroy Reading Enable
     Branch,  // Branch Enable
+    input  logic [          1:0] MemtoReg,  // Register file writing enable   // Memory or ALU MUX
     input  logic [          1:0] ALUOp,
     input  logic [ALU_CC_W -1:0] ALU_CC,         // ALU Control Code ( input of the ALU )
     output logic [          6:0] opcode,
@@ -135,7 +135,7 @@ module Datapath #(
     if ((reset) || (Reg_Stall) || (PcSel))   // initialization or flush or generate a NOP if hazard
         begin
       B.ALUSrc <= 0;
-      B.MemtoReg <= 0;
+      B.MemtoReg <= 2'b00;
       B.RegWrite <= 0;
       B.MemRead <= 0;
       B.MemWrite <= 0;
@@ -233,7 +233,7 @@ module Datapath #(
     if (reset)   // initialization
         begin
       C.RegWrite <= 0;
-      C.MemtoReg <= 0;
+      C.MemtoReg <= 2'b00;
       C.MemRead <= 0;
       C.MemWrite <= 0;
       C.Pc_Imm <= 0;
@@ -304,9 +304,11 @@ module Datapath #(
   end
 
   //--// The LAST Block
-  mux2 #(32) resmux (
+  mux4 #(32) resmux (
       D.Alu_Result,
       D.MemReadData,
+      D.Pc_Four,
+      32'hxxxxxxxx,
       D.MemtoReg,
       WrmuxSrc
   );
