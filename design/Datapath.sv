@@ -61,7 +61,7 @@ module Datapath #(
 
   // next PC
   adder #(9) pcadd (
-      PC,
+      (MemtoReg == 2'b11) ? PC - 4 : PC,
       9'b100,
       PCPlus4
   );

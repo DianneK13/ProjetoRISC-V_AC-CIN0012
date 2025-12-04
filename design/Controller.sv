@@ -30,9 +30,10 @@ module Controller (
   assign IMM = 7'b0010011; //immediate operations
   assign JAL = 7'b1101111; //jal
   assign JALR = 7'b1100111; //jalr
+  assign HALT = 7'b0000000; //halt
 
   assign ALUSrc = (Opcode == LW || Opcode == SW || Opcode == IMM || Opcode == JALR);
-  assign MemtoReg = (Opcode == LW) ? 2'b01 : (Opcode == JAL || Opcode == JALR) ? 2'b10 : 2'b00;
+  assign MemtoReg = (Opcode == LW) ? 2'b01 : (Opcode == JAL || Opcode == JALR) ? 2'b10 : (Opcode == HALT) ? 2'b11 : 2'b00;
   assign RegWrite = (Opcode == R_TYPE || Opcode == LW || Opcode == IMM || Opcode == JAL || Opcode == JALR);
   assign MemRead = (Opcode == LW);
   assign MemWrite = (Opcode == SW);
