@@ -38,7 +38,9 @@ module alu#(
             4'b1010:        // Not equal
                     ALUResult = (SrcA == SrcB) ? 0 : 1;
             4'b1011:        // BGE
-                    ALUResult = ($signed(SrcA) >= $signed(SrcB)) ? 1 : 0;        
+                    ALUResult = ($signed(SrcA) >= $signed(SrcB)) ? 1 : 0;  
+            4'b1100:
+                    ALUResult = SrcA;
             default:
                     ALUResult = 0;
             endcase
