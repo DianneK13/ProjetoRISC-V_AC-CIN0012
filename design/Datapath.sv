@@ -19,6 +19,7 @@ module Datapath #(
     Branch,  // Branch Enable
     Jump,
     JumpReg,
+    HaltSignal,
     input  logic [          1:0] MemtoReg,  // Register file writing enable   // Memory or ALU MUX
     input  logic [          1:0] ALUOp,
     input  logic [ALU_CC_W -1:0] ALU_CC,         // ALU Control Code ( input of the ALU )
@@ -47,12 +48,24 @@ module Datapath #(
   logic [DATA_W-1:0] SrcB, ALUResult;
   logic [DATA_W-1:0] ExtImm, BrImm, Old_PC_Four, BrPC;
   logic [DATA_W-1:0] WrmuxSrc;
+  logic Halt_Active; // Estado ativo do HALT
   logic PcSel;  // mux select / flush signal
   logic [1:0] FAmuxSel;
   logic [1:0] FBmuxSel;
   logic [DATA_W-1:0] FAmux_Result;
   logic [DATA_W-1:0] FBmux_Result;
   logic Reg_Stall;  //1: PC fetch same, Register not update
+  logic Final_Reg_Stall;
+  assign Final_Reg_Stall = Reg_Stall | Halt_Active;
+
+  // Lógica para persistir o sinal de HALT (uma vez visto no estágio ID/EX)
+  always @(posedge clk) begin
+      if (reset)
+          Halt_Active <= 1'b0;
+      // B.HaltSignal é o sinal do HALT vindo do estágio ID/EX
+      else if (B.HaltSignal) 
+          Halt_Active <= 1'b1;
+  end
 
   if_id_reg A;
   id_ex_reg B;
@@ -75,7 +88,7 @@ module Datapath #(
       clk,
       reset,
       Next_PC,
-      Reg_Stall,
+      Final_Reg_Stall,
       PC
   );
   instructionmemory instr_mem (
@@ -86,7 +99,7 @@ module Datapath #(
 
   // IF_ID_Reg A;
   always @(posedge clk) begin
-    if ((reset) || (PcSel))   // initialization or flush
+    if ((reset) || (PcSel) || (Halt_Active))   // initialization or flush
         begin
       A.Curr_Pc <= 0;
       A.Curr_Instr <= 0;
@@ -134,7 +147,7 @@ module Datapath #(
 
   // ID_EX_Reg B;
   always @(posedge clk) begin
-    if ((reset) || (Reg_Stall) || (PcSel))   // initialization or flush or generate a NOP if hazard
+    if ((reset) || (Reg_Stall) || (PcSel) || (Halt_Active))   // initialization or flush or generate a NOP if hazard
         begin
       B.ALUSrc <= 0;
       B.MemtoReg <= 2'b00;
@@ -145,6 +158,7 @@ module Datapath #(
       B.Branch <= 0;
       B.Jump <= 0;
       B.JumpReg <= 0;
+      B.HaltSignal <= 0;
       B.Curr_Pc <= 0;
       B.RD_One <= 0;
       B.RD_Two <= 0;
@@ -165,6 +179,7 @@ module Datapath #(
       B.Branch <= Branch;
       B.Jump <= Jump;
       B.JumpReg <= JumpReg;
+      B.HaltSignal<= HaltSignal;
       B.Curr_Pc <= A.Curr_Pc;
       B.RD_One <= Reg1;
       B.RD_Two <= Reg2;
@@ -229,6 +244,7 @@ module Datapath #(
       B.Branch,
       B.Jump,
       B.JumpReg,
+      B.HaltSignal,
       ALUResult,
       BrImm,
       Old_PC_Four,

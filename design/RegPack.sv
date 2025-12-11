@@ -17,6 +17,7 @@ package Pipe_Buf_Reg_PKG;
     logic        Branch;
     logic        Jump;
     logic        JumpReg;
+    logic        HaltSignal;
     logic [8:0]  Curr_Pc;
     logic [31:0] Pc_Four;
     logic [31:0] RD_One;

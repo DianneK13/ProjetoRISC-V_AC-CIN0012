@@ -253,6 +253,12 @@ INSTRUCTION = {
   "funct3": "111",
   "funct7": "0000000"
  },
+ "halt": {
+  "format": "J",
+  "opcode": "1111111",
+  "funct3": "",
+  "funct7": ""	 
+ }
 }
 
 
